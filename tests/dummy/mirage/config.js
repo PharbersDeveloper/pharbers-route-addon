@@ -50,4 +50,107 @@ export default function() {
 			},
 		}
 	})
+
+	this.post('/bmauths/:id', (schema, request) => {
+		return {
+			"data": {
+				"id": "5b7505b68fb8074eb73cecdf",
+				"attributes": {
+					"token": "978967bee38f4143e971cca697134919"
+				},
+				"type": "BMAuth",
+				"relationships": {
+					"phone": {
+						"data": {
+							"id": "5b7505b68fb8074eb73cece2",
+							"type": "BMPhone"
+						}
+					},
+					"profile": {
+						"data": {
+							"id": "5b7a343d8fb807633402a8d5",
+							"type": "BMProfile"
+						}
+					},
+					"wechat": {
+						"data": {
+							"id": "5b7505b68fb8074eb73cece3",
+							"type": "BMWechat"
+						}
+					}
+				}
+			},
+			"included": [
+				{
+					"attributes": {
+						"name": ""
+					},
+					"id": "5b7a343d8fb807633402a8d4",
+					"relationships": {
+						"profiles": {
+							"data": null
+						}
+					},
+					"type": "BMCompany"
+				},
+				{
+					"id": "5b7505b68fb8074eb73cece3",
+					"attributes": {
+						"name": "Alex",
+						"openid": "",
+						"photo": ""
+					},
+					"type": "BMWechat"
+				},
+				{
+					"id": "5b7a343d8fb807633402a8d5",
+					"attributes": {
+						"screenname": "Alex",
+						"screenphoto": ""
+					},
+					"relationships": {
+						"company": {
+							"data": {
+								"id": "5b7a343d8fb807633402a8d4",
+								"type": "BMCompany"
+							}
+						}
+					},
+					"type": "BMProfile"
+				},
+				{
+					"attributes": {
+						"phone": "13720200891"
+					},
+					"id": "5b7505b68fb8074eb73cece2",
+					"type": "BMPhone"
+				}
+			]
+		}
+	})
+
+	this.patch('/bmauths/:id', (schema, request) => {
+		window.console.info(request.requestBody);
+		return {
+			"data": {
+				"attributes": {
+					"success": "ok"
+				},
+				"id": "5b7505b68fb8074eb73cecdf",
+				"type": "bmauth"
+			}
+		}
+	})
+
+	this.get('/bmphones/:id', (schema, request) => {
+		return {
+			"data": {
+				"attributes": {
+					"phone": "13720200891"
+				},
+				"id": "5b7505b68fb8074eb73cece2",
+				"type": "bmphone"
+			}
+		}
+	})
 }

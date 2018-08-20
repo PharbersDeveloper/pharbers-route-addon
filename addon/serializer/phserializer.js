@@ -1,6 +1,10 @@
 import DS from 'ember-data';
 
-export default DS.JSONSerializer.extend({
+export default DS.JSONAPISerializer.extend({
+    primaryKey: 'id',
+    keyForAttribute(key) {
+        return key;
+    },
     normalizeResponse(store, model, payload, id, requestType) {
         switch(requestType) {
             case 'queryObject':
