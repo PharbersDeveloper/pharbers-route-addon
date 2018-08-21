@@ -27,69 +27,71 @@ module.exports = {
 		},
 	],
 
-	fileMapTokens: function() {
+	fileMapTokens: function(options) {
+		let temp = this.ui;
+		// temp.writeLine(options.pod);
 		return {
-			__route_name__(options) {
+			__route_name__() {
 				if (options.pod) {
 					return 'route';
 				}
 				return options.locals.moduleName;
 			},
-			__model_name__(options) {
+			__model_name__() {
 				if (options.pod) {
 					return 'model';
 				}
 				return options.locals.moduleName;
 			},
-			__adapter_name__(options) {
+			__adapter_name__() {
 				if (options.pod) {
 					return 'adapter';
 				}
 				return options.locals.moduleName;
 			},
-			__serializer_name__(options) {
+			__serializer_name__() {
 				if (options.pod) {
 					return 'serializer';
 				}
 				return options.locals.moduleName;
 			},
-			__model__(options) {
+			__model__() {
 				if (options.pod) {
 					return path.join(options.podPath, options.locals.moduleName);
 				}
 				return 'models';
 			},
-			__route__(options) {
+			__route__() {
 				if (options.pod) {
 					return path.join(options.podPath, options.locals.moduleName);
 				}
 				return 'routes';
 			},
-			__adapter__(options) {
-				if (options.pod) {
-					return path.join(options.podPath, options.locals.moduleName);
-				}
-				return 'adapters';
-			},
-			__serializer__(optioins) {
-				if (optioins.pod) {
-					return path.join(options.podPath, options.locals.moduleName);
-				}
-				return 'serializers';
-			},
-			__templatepath__(options) {
+			__templatepath__() {
 				if (options.pod) {
 					return path.join(options.podPath, options.locals.moduleName);
 				}
 				return 'templates';
 			},
-			__templatename__(options) {
+			__templatename__() {
 				if (options.pod) {
 					return 'template';
 				}
 				return options.locals.moduleName;
 			},
-			__root__(options) {
+			__serializer__() {
+				if (options.pod) {
+					return path.join(options.podPath, options.locals.moduleName);
+				}
+				return 'serializers';
+			},
+			__adapter__() {
+				if (options.pod) {
+					return path.join(options.podPath, options.locals.moduleName);
+				}
+				return 'adapters';
+			},
+			__root__() {
 				if (options.inRepoAddon) {
 					return path.join('lib', options.inRepoAddon, 'addon');
 				}
