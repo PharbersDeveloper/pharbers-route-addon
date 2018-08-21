@@ -9,6 +9,8 @@ export default DS.JSONAPISerializer.extend({
         switch(requestType) {
             case 'queryObject':
                 return this.normalizeQueryRecordResponse(...arguments);
+            case 'transaction':
+                    return this.normalizeQueryRecordResponse(...arguments);
             case 'queryMultipleObject':
                 return this.normalizeQueryResponse(...arguments);
             default:

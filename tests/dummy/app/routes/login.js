@@ -1,103 +1,25 @@
 import Route from '@ember/routing/route';
-import EmberObject from '@ember/object';
-
-
-const Data = EmberObject.extend({
-    id: "fuck",
-    type: "request",
-    attributes: {},
-    relationships: {},
-    init() {
-        this._super(...arguments);
-        this.set('relationships', {});
-        this.set('attributes', {});
-    },
-    output() {
-        return {
-            data: {
-                id: this.id,
-                type: this.type,
-                attributes: this.attributes,
-                relationships: this.relationships
-            },
-            included: this.included
-        }
-    }
-})
-
-const Contact = EmberObject.extend({
-    joint(data, inputs) {
-        let recursive = function(object, data) {
-            return object.map((elem) => {
-                let o;
-                try { o = data[elem].data }
-                catch (e) { o = elem }
-                if (Array.isArray(o)) {
-                    return recursive(o, data);
-                } else {
-                    let f = inputs.find((elem) => {
-                        return elem.id == o.id && elem.type == o.type
-                    });
-                    if(f) {
-                        delete f.id
-                        delete f.type
-                    }
-                    return {
-                        id: o.id,
-                        type: o.type,
-                        attributes: f || null
-                    }
-                }
-            });
-        }
-        let temp = data.output();
-        let included = recursive(
-                            Object.keys(temp.data.relationships),
-                                        temp.data.relationships)
-        data.set('included', included);
-        return data.output()
-    }
-})
+import { inject } from '@ember/service';
 
 export default Route.extend({
+	cookies: inject(),
 	model() {
 
         let res = "BMPhone";
         let inputs = [{id: "2", type: "eq_cond", key: "phone", val: "13720200891"}]
 
-        let data = Data.create();
+        let data = this.Data;
+        data.init()
         data.set('attributes.res', res);
         data.set('relationships.conditions', {data: [{id: '2', type: 'eq_cond'}]});
 
-        let condition = Contact.create().joint(data, inputs)
-        // window.console.info(condition)
-        //
-		// let condition = {
-		// 	"data": {
-		// 		"id": "1",
-		// 		"type": "request",
-		// 		"attributes": {
-		// 			"res": "BMPhone"
-		// 		},
-		// 		"relationships": {
-		// 			"conditions": {
-		// 				"data": [{
-		// 					"id": "2",
-		// 					"type": "eq_cond"
-		// 				}]
-		// 			}
-		// 		}
-		// 	},
-		// 	"included": [{
-		// 		"id": "2",
-		// 		"type": "eq_cond",
-		// 		"attributes": {
-		// 			"key": "phone",
-		// 			"val": "13720200891"
-		// 		}
-		// 	}]
-		// }
-        return this.store.queryObject('bmauth', condition)
+        let condition = this.Contact.joint(data, inputs)
+
+		let that = this;
+        return this.store.queryObject('bmauth', condition).then(function(data){
+			that.get('cookies').write('token', data.token, { path: '/' });
+			return data
+		})
 	},
 	actions: {
 		test() {
@@ -108,23 +30,43 @@ export default Route.extend({
             // let res = "BMPhone";
             // let inputs = [{id: "2", type: "eq_cond", key: "phone", val: "13720200891"}, {id: "3", type: "location", title: "天庭", location: "000.000，000.000"}]
             //
-            // let data = Data.create();
-            // data.set('attributes.res', res);
-            // data.set('relationships.conditions', {data: [{id: '2', type: 'eq_cond'}]});
-            // data.set('relationships.location', {data: [{id: '3', type: 'location'}]});
+            // let data1 = this.Data;
+            // data1.init()
+            // data1.set('attributes.res', res);
+            // data1.set('relationships.conditions', {data: [{id: '2', type: 'eq_cond'}]});
+            // data1.set('relationships.location', {data: [{id: '3', type: 'location'}]});
             //
-            // let condition = Contact.create().joint(data, inputs)
-            // window.console.info(condition)
+            // let condition1 = this.Contact.joint(data1, inputs)
+            // window.console.info(condition1)
 
             // 算是新增吧
-            let data = Data.create();
+            // let data2 = this.Data;
+            // data2.init()
+            // data2.set('attributes.name', 'Alex');
+            // data2.set('attributes.age', 18);
+            // data2.set('relationships.user', {data: [{id: '2', type: 'eq_cond'}]});
+            //
+            // let condition2 = this.Contact.joint(data2, [])
+            // window.console.info(condition2)
+
+		},
+
+        insert() {
+            let data = this.Data;
+            data.init();
+            data.set('type', 'Contact');
             data.set('attributes.name', 'Alex');
-            data.set('attributes.age', 18);
-            data.set('relationships.user', {data: [{id: '2', type: 'eq_cond'}]});
+            data.set('attributes.phone', '18510971868');
+            data.set('relationships.location', {data: {id: '10010', type: 'Location'}});
+            data.set('relationships.orders', {data: [{id: '11112', type: 'Order'}, {id: '11113', type: 'Order'}]});
 
-            let condition = Contact.create().joint(data, [])
-            window.console.info(condition)
-
-		}
+            let inputs = [
+                {id: "10010", type: "Location", title: "中国", address: "北京", district: "通州"},
+                {id: "11112", type: "Order", title: "啦啦啦"},
+                {id: "11113", type: "Order", title: "叭叭叭"}
+            ]
+            let condition = this.Contact.joint(data, inputs)
+            this.store.transaction('contact', condition)
+        },
 	}
 });

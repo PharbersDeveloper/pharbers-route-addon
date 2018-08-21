@@ -67,3 +67,22 @@ export function _queryMultipleObject(adapter, store, modelName, query, recordArr
 		return recordArray;
 	}, null, `DS: Extract payload of query ${modelName}`);
 }
+
+export function _transaction(adapter, store, modelName, query) {
+
+	let modelClass = store.modelFor(modelName);
+	let promise = adapter.transaction(store, modelClass, query);
+
+	let label = `DS: Handle Adapter#transaction of ${modelName}`;
+
+	promise = Promise.resolve(promise, label);
+	promise = _guard(promise, _bind(_objectIsAlive, store));
+
+	return promise.then((adapterPayload) => {
+
+		let serializer = serializerForAdapter(store, adapter, modelName);
+		let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'transaction'); //queryRecord queryObject
+
+		return store._push(payload);
+	}, null, `DS: Extract payload of transaction ${modelName}`)
+}

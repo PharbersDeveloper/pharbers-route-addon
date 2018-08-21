@@ -1,4 +1,5 @@
 import PharbersSerializer from 'pharbers-route-addon/serializer/phserializer';
+import DS from 'ember-data';
 
 /**
  * 所有的Serializer都要继承phserializer

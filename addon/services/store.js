@@ -10,7 +10,8 @@ import {
 
 import {
 	_queryObject,
-	_queryMultipleObject
+	_queryMultipleObject,
+	_transaction
 } from "../-private/store-finders";
 
 /**
@@ -51,5 +52,21 @@ export default DS.Store.extend({
 				normalizedModelName,
 				jsonObject,
 				undefined));
+	},
+	transaction(modelName, jsonObject) {
+		let normalizedModelName = normalizeModelName(modelName);
+		let adapter = this.adapterFor(normalizedModelName);
+		assert(`you must implement 'transaction' in your Adapter`, typeof adapter.transaction === 'function');
+		return promiseObject(
+			_transaction(adapter,
+				this,
+				modelName,
+				jsonObject)
+			.then(internalModel => {
+				if (internalModel) {
+					return internalModel.getRecord();
+				}
+				return null;
+			}));
 	},
 });
