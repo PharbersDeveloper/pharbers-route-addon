@@ -18,10 +18,10 @@ import { serializerForAdapter } from "./serializers";
  * 只做了2件事 监测绑定store与adapter转向代理方法的封装
  * 这是个封装的工具包
  */
-export function _queryObject(adapter, store, modelName, query) {
+export function _queryObject(url, adapter, store, modelName, query) {
 
 	let modelClass = store.modelFor(modelName);
-	let promise = adapter.queryObject(store, modelClass, query);
+	let promise = adapter.queryObject(url, store, modelClass, query);
 
 	let label = `DS: Handle Adapter#queryObject of ${modelName}`;
 
@@ -37,15 +37,15 @@ export function _queryObject(adapter, store, modelName, query) {
 	}, null, `DS: Extract payload of queryObject ${modelName}`)
 }
 
-export function _queryMultipleObject(adapter, store, modelName, query, recordArray) {
+export function _queryMultipleObject(url, adapter, store, modelName, query, recordArray) {
 	let modelClass = store.modelFor(modelName);
 
 	let promise;
 	if (adapter.queryMultipleObject.length > 3) {
 		recordArray = recordArray || store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
-		promise = adapter.queryMultipleObject(store, modelClass, query, recordArray);
+		promise = adapter.queryMultipleObject(url, store, modelClass, query, recordArray);
 	} else {
-		promise = adapter.queryMultipleObject(store, modelClass, query);
+		promise = adapter.queryMultipleObject(url, store, modelClass, query);
 	}
 
 	let label = `DS: Handle Adapter#queryMultipleObject of ${modelClass}`;
@@ -68,10 +68,10 @@ export function _queryMultipleObject(adapter, store, modelName, query, recordArr
 	}, null, `DS: Extract payload of query ${modelName}`);
 }
 
-export function _transaction(adapter, store, modelName, query) {
+export function _transaction(url, adapter, store, modelName, query) {
 
 	let modelClass = store.modelFor(modelName);
-	let promise = adapter.transaction(store, modelClass, query);
+	let promise = adapter.transaction(url, store, modelClass, query);
 
 	let label = `DS: Handle Adapter#transaction of ${modelName}`;
 
@@ -81,7 +81,7 @@ export function _transaction(adapter, store, modelName, query) {
 	return promise.then((adapterPayload) => {
 
 		let serializer = serializerForAdapter(store, adapter, modelName);
-		let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'transaction'); //queryRecord queryObject
+		let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'transaction');
 
 		return store._push(payload);
 	}, null, `DS: Extract payload of transaction ${modelName}`)

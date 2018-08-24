@@ -29,7 +29,7 @@ module.exports = {
 
 	fileMapTokens: function(options) {
 		let temp = this.ui;
-		// temp.writeLine(options.pod);
+		// temp.writeLine(isModuleUnificationProject(this.project));
 		return {
 			__route_name__() {
 				if (options.pod) {
@@ -248,7 +248,7 @@ function findRouter(options) {
 	} else {
 		routerPathParts = routerPathParts.concat([root, 'router.js']);
 	}
-
+	
 	return routerPathParts;
 }
 

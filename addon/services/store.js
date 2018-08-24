@@ -23,12 +23,13 @@ export default DS.Store.extend({
 		this._super(...arguments)
 		window.console.log("The Custom DS.Store Init()")
 	},
-	queryObject(modelName, jsonObject) {
+	queryObject(url, modelName, jsonObject) {
 		let normalizedModelName = normalizeModelName(modelName);
 		let adapter = this.adapterFor(normalizedModelName);
 		assert(`you must implement 'queryObject' in your Adapter`, typeof adapter.queryObject === 'function');
 		return promiseObject(
-			_queryObject(adapter,
+			_queryObject(url,
+				adapter,
 				this,
 				modelName,
 				jsonObject)
@@ -39,7 +40,7 @@ export default DS.Store.extend({
 				return null;
 			}));
 	},
-	queryMultipleObject(modelName, jsonObject) {
+	queryMultipleObject(url, modelName, jsonObject) {
 		assert(`You need to pass a model name to the store's queryMultipleObject method`, isPresent(modelName));
 		assert(`You need to pass a queryMultipleObject hash to the store's queryMultipleObject method`, jsonObject);
 		assert(`Passing classes to store methods has been removed. Please pass a dasherized string instead of ${modelName}`, typeof modelName === 'string');
@@ -47,18 +48,20 @@ export default DS.Store.extend({
 		let adapter = this.adapterFor(normalizedModelName);
 		assert(`You tried to load a queryMultipleObject but your adapter does not implement 'queryMultipleObject'`, typeof adapter.queryMultipleObject === 'function');
 		return promiseArray(
-			_queryMultipleObject(adapter,
+			_queryMultipleObject(url,
+				adapter,
 				this,
 				normalizedModelName,
 				jsonObject,
 				undefined));
 	},
-	transaction(modelName, jsonObject) {
+	transaction(url, modelName, jsonObject) {
 		let normalizedModelName = normalizeModelName(modelName);
 		let adapter = this.adapterFor(normalizedModelName);
 		assert(`you must implement 'transaction' in your Adapter`, typeof adapter.transaction === 'function');
 		return promiseObject(
-			_transaction(adapter,
+			_transaction(url,
+				adapter,
 				this,
 				modelName,
 				jsonObject)

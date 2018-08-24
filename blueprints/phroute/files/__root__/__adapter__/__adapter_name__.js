@@ -12,16 +12,16 @@ export default DS.JSONAPIAdapter.extend({
         }
     },
     headers: {},
-    queryObject(store, type, jsonObject) {
+    queryObject(url, store, type, jsonObject) {
         this.set('headers.Authorization', "bearer " + this.get('cookies').read('token'))
-		return this.ajax(`business url`, 'POST', this.get('headOpt')(jsonObject));
+		return this.ajax(url, 'POST', this.get('headOpt')(jsonObject));
 	},
-    queryMultipleObject(store, type, jsonObject) {
+    queryMultipleObject(url, store, type, jsonObject) {
         this.set('headers.Authorization', "bearer " + this.get('cookies').read('token'))
-		return this.ajax(`business url`, 'POST', this.get('headOpt')(jsonObject));
+		return this.ajax(url, 'POST', this.get('headOpt')(jsonObject));
 	},
-    transaction(store, type, jsonObject) {
+    transaction(url, store, type, jsonObject) {
         this.set('headers.Authorization', "bearer " + this.get('cookies').read('token'))
-		return this.ajax(`business url`, 'POST', this.get('headOpt')(jsonObject));
+		return this.ajax(url, 'POST', this.get('headOpt')(jsonObject));
 	},
 });

@@ -18,7 +18,6 @@ export function initialize(application) {
         relationships: {},
         init() {
             this._super(...arguments);
-            window.console.info('fuck')
             this.set('relationships', {});
             this.set('attributes', {});
             this.set('included', []);
