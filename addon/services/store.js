@@ -26,7 +26,7 @@ export default DS.Store.extend({
 	queryObject(url, modelName, jsonObject) {
 		let normalizedModelName = normalizeModelName(modelName);
 		let adapter = this.adapterFor(normalizedModelName);
-		assert(`you must implement 'queryObject' in your Adapter`, typeof adapter.queryObject === 'function');
+		assert(`you must implement 'queryObject' in your ${modelName} Adapter`, typeof adapter.queryObject === 'function');
 		return promiseObject(
 			_queryObject(url,
 				adapter,
@@ -41,12 +41,12 @@ export default DS.Store.extend({
 			}));
 	},
 	queryMultipleObject(url, modelName, jsonObject) {
-		assert(`You need to pass a model name to the store's queryMultipleObject method`, isPresent(modelName));
+		assert(`You need to pass a model name: ${modelName} to the store's queryMultipleObject method`, isPresent(modelName));
 		assert(`You need to pass a queryMultipleObject hash to the store's queryMultipleObject method`, jsonObject);
 		assert(`Passing classes to store methods has been removed. Please pass a dasherized string instead of ${modelName}`, typeof modelName === 'string');
 		let normalizedModelName = normalizeModelName(modelName);
 		let adapter = this.adapterFor(normalizedModelName);
-		assert(`You tried to load a queryMultipleObject but your adapter does not implement 'queryMultipleObject'`, typeof adapter.queryMultipleObject === 'function');
+		assert(`You tried to load a queryMultipleObject but your ${modelName} adapter does not implement 'queryMultipleObject'`, typeof adapter.queryMultipleObject === 'function');
 		return promiseArray(
 			_queryMultipleObject(url,
 				adapter,
@@ -58,7 +58,7 @@ export default DS.Store.extend({
 	transaction(url, modelName, jsonObject) {
 		let normalizedModelName = normalizeModelName(modelName);
 		let adapter = this.adapterFor(normalizedModelName);
-		assert(`you must implement 'transaction' in your Adapter`, typeof adapter.transaction === 'function');
+		assert(`you must implement 'transaction' in your ${modelName} Adapter`, typeof adapter.transaction === 'function');
 		return promiseObject(
 			_transaction(url,
 				adapter,
