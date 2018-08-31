@@ -8,7 +8,6 @@ export default DS.JSONAPIAdapter.extend({
             data: query
         }
     },
-    headers: {},
     headers: {
         "dataType": 'json',
         "contentType": 'application/json',
