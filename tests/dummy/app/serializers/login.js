@@ -10,5 +10,5 @@ export default PharbersSerializer.extend({
 	normalizeResponse(store, model, payload) {
 		this._super(...arguments);
 		return payload;
-	},
+	}
 });
