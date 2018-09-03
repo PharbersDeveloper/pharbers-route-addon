@@ -79,17 +79,8 @@ module.exports = {
 				}
 				return options.locals.moduleName;
 			},
-			__serializer__() {
-				if (options.pod) {
-					return path.join(options.podPath, options.locals.moduleName);
-				}
-				return 'serializers';
-			},
-			__adapter__() {
-				if (options.pod) {
-					return path.join(options.podPath, options.locals.moduleName);
-				}
-				return 'adapters';
+			__application__() {
+				return 'application';
 			},
 			__root__() {
 				if (options.inRepoAddon) {
@@ -248,7 +239,7 @@ function findRouter(options) {
 	} else {
 		routerPathParts = routerPathParts.concat([root, 'router.js']);
 	}
-	
+
 	return routerPathParts;
 }
 
