@@ -142,7 +142,7 @@ export default DS.Store.extend({
 			let eq_cond = relationships.eq_cond = {};
 			let up_cond = relationships.up_cond = {};
 			let fm_cond = relationships.fm_cond = {};
-			object.eq_cond.forEach((elem, index) => {
+			object.get('eq_cond').forEach((elem, index) => {
 				if (index === 0) {
 					eq_cond.data = [];
 				}
@@ -159,7 +159,7 @@ export default DS.Store.extend({
 				});
 				number++
 			})
-			object.up_cond.forEach((elem, index) => {
+			object.get('up_cond').forEach((elem, index) => {
 				if (index === 0) {
 					up_cond.data = [];
 				}
@@ -177,17 +177,22 @@ export default DS.Store.extend({
 				number++
 			})
 
-			let attributes = object.fm_cond.serialize().data.attributes
-			let type = object.fm_cond.serialize().data.type
-			fm_cond.data = {
-				id: "-215",
-				type
+			if(object.get('fm_cond') !== null) {
+				console.info(object.get('fm_cond'))
+
+				let attributes = object.get('fm_cond').serialize().data.attributes
+				let type = object.get('fm_cond').serialize().data.type
+				fm_cond.data = {
+					id: "-215",
+					type
+				}
+				included.push({
+					id: "-215",
+					type: "fm_cond",
+					attributes
+				})
 			}
-			included.push({
-				id: "-215",
-				type: "fm_cond",
-				attributes
-			})
+			
 			deleteValueNil(json.data.relationships)
 		} else {
 			let keys = [];
