@@ -77,7 +77,7 @@ export default DS.Store.extend({
 	},
 
 	object2JsonApi(modelName, modelObj) {
-		
+
 		function relationshipIsNull(o) {
 			let relationshipsObject = modelObj._internalModel.__relationships.initializedRelationships
 			if (Object.keys(relationshipsObject).length === 0) {
@@ -87,13 +87,20 @@ export default DS.Store.extend({
 			}
 		}
 		function relationshipDataIsNull(value) {
-			return Object.keys(value).length === 0 ? false : true
+			return value === null || Object.keys(value).length === 0  ? false : true
 		}
 		function belongsToType(value) {
 			return value.kind === 'belongsTo'
 		}
 		function hasManyType(value) {
 			return value.kind === 'hasMany'
+		}
+		function deleteNullRelationship() {
+			if (Object.keys(json.data.relationships).length === 0 ) {
+				delete json.data.relationships
+			} if ( json.included.length === 0 ){
+				delete json.included
+			}
 		}
 
 		let number = 0;
@@ -107,7 +114,7 @@ export default DS.Store.extend({
 			json.included = [];
 			let rdata = null;
 			rsps.keys.forEach((elem) => {
-				if (belongsToType(rsps.value[elem])) {
+				if (belongsToType(rsps.value[elem]) && relationshipDataIsNull(modelObj[elem])) {
 					let attributes = modelObj[elem].serialize().data.attributes
 					let type = modelObj[elem].serialize().data.type
 					rdata = json.data.relationships[elem] = {};
@@ -143,8 +150,10 @@ export default DS.Store.extend({
 				}
 			})
 		} else {
+			deleteNullRelationship()
 			return json;
 		}
+		deleteNullRelationship()
 		return json;
 	}
 
