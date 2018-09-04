@@ -69,7 +69,8 @@ export default Route.extend({
 			}))
 		});
 
-		this.store.object2JsonApi('bmauth', result)
+		let a = this.store.object2JsonApi('bmauth', result)
+		console.info(a)
 
 	},
 	actions: {

@@ -236,7 +236,6 @@ export default DS.Store.extend({
 			});
 
 			Object.keys(json.data.relationships).forEach(elem => {
-				console.info(json.data.relationships[elem].data.length)
 				if(json.data.relationships[elem].data.length === 1) {
 					json.data.relationships[elem].data =
 					json.data.relationships[elem].data[0]
@@ -244,7 +243,7 @@ export default DS.Store.extend({
 			})
 		}
 
-		console.info(json)
+		return json;
 	}
 
 });
