@@ -1,5 +1,5 @@
 import PharbersSerializer from 'pharbers-route-addon/serializer/phserializer';
-// import { decamelize } from '@ember/string';
+import { decamelize } from '@ember/string';
 import { pluralize, singularize} from 'ember-inflector';
 
 /**
@@ -9,16 +9,19 @@ import { pluralize, singularize} from 'ember-inflector';
  */
 export default PharbersSerializer.extend({
 	primaryKey: 'id',
-    keyForAttribute(key) {
-        return key;
-    },
-	serialize(snapshot) {
+    serialize(snapshot) {
         let json = this._super(...arguments);
         json.data.type = singularize(json.data.type)
         return json
     },
+    // pathForType: function(modelName) {
+    //     console.info(modelName)
+    //     var decamelized = decamelize(modelName);
+    //     console.info(decamelized)
+    //     return pluralize(decamelized);
+    // },
 	normalizeResponse(store, model, payload) {
 		this._super(...arguments);
 		return payload;
-	},
+	}
 });
