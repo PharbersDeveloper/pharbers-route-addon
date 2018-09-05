@@ -49,13 +49,15 @@ export default Route.extend({
 			})
 
 			let values = [
-				{name: "Alex", type: 'wechat'},
-				{name: "Alfred", type: 'wechat'}]
+				{name: "Alex", type: 'wechat', list: ['a', 'b', 'c']},
+				{name: "Alfred", type: 'wechat', list: ['e', 'd', 'f']}
+			]
 
 			values.forEach((elem, index) => {
 				result.get(elem.type).pushObject(this.store.createRecord("bm"+elem.type, {
 					id: index,
 					name: elem.name,
+					list: elem.list
 				}))
 			});
 
