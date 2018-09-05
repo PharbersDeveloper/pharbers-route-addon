@@ -103,23 +103,10 @@ export default DS.Store.extend({
 			}
 		}
 		function cleanModel(model, name) {
-			// debugger
-			// console.info(model.get('id'))
-			//
-			model.store.peekfindAll(name).then(result => {
-				console.info(result)
-				// result.deleteRecord()
-			});
-
-			// try {
-			// 	model.destroyRecord()
-			// } catch (e) {
-			// 	model.store.findRecord(name, model.get('id'), { backgroundReload: false }).then(result => {
-			// 		console.info(result)
-			// 		result.deleteRecord()
-			// 	});
-			// }
-
+			let reVal = model.store.peekAll(name)
+			reVal.forEach(elem => {
+				elem.destroyRecord()
+			})
 		}
 
 		let number = 0;
@@ -138,15 +125,15 @@ export default DS.Store.extend({
 					let type = modelObj[elem].serialize().data.type
 					rdata = json.data.relationships[elem] = {};
 					rdata.data = {
-						id: modelObj[elem].get('id') || index + "",
+						id: modelObj[elem].get('id') || number + "",
 						type
 					};
 					json.included.push({
-						id: modelObj[elem].get('id') || index + "",
+						id: modelObj[elem].get('id') || number + "",
 						type,
 						attributes
 					})
-					// cleanModel(modelObj[elem], elem)
+					cleanModel(modelObj[elem], elem)
 				} else if (hasManyType(rsps.value[elem])) {
 					if(relationshipDataIsNull(rsps.value[elem])) {
 						modelObj[elem].forEach((ele, index) => {
@@ -167,16 +154,17 @@ export default DS.Store.extend({
 							})
 						})
 					}
-					// modelObj[elem].forEach(ele => { cleanModel(ele, elem) })
 				}
+				cleanModel(modelObj, elem)
+				number++
 			})
 		} else {
 			deleteNullRelationship()
-			// cleanModel(modelObj, modelName)
+			cleanModel(modelObj, modelName)
 			return json;
 		}
 		deleteNullRelationship()
-		// cleanModel(modelObj, modelName)
+		cleanModel(modelObj, modelName)
 		return json;
 	}
 
