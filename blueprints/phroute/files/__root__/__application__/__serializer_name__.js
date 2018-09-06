@@ -1,6 +1,6 @@
 import PharbersSerializer from 'pharbers-route-addon/serializer/phserializer';
 // import { decamelize } from '@ember/string';
-import { pluralize, singularize} from 'ember-inflector';
+// import { pluralize, singularize} from 'ember-inflector';
 
 /**
  * 所有的Serializer都要继承phserializer
@@ -12,11 +12,17 @@ export default PharbersSerializer.extend({
     keyForAttribute(key) {
         return key;
     },
-	serialize(snapshot) {
-        let json = this._super(...arguments);
-        json.data.type = singularize(json.data.type)
-        return json
-    },
+	payloadKeyFromModelName(modelName) {
+		return modelName
+	},
+	modelNameFromPayloadKey(modelName) {
+		return modelName
+	},
+	// serialize(snapshot) {
+    //     let json = this._super(...arguments);
+    //     json.data.type = singularize(json.data.type)
+    //     return json
+    // },
 	normalizeResponse(store, model, payload) {
 		this._super(...arguments);
 		return payload;
