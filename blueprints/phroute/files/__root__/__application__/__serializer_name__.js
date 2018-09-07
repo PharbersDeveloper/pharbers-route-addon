@@ -9,9 +9,12 @@ import PharbersSerializer from 'pharbers-route-addon/serializer/phserializer';
  */
 export default PharbersSerializer.extend({
 	primaryKey: 'id',
-    keyForAttribute(key) {
-        return key;
-    },
+	keyForAttribute(key) {
+		return key;
+	},
+	keyForRelationship(key) {
+		return key;
+	},
 	payloadKeyFromModelName(modelName) {
 		return modelName
 	},
@@ -19,10 +22,10 @@ export default PharbersSerializer.extend({
 		return modelName
 	},
 	// serialize(snapshot) {
-    //     let json = this._super(...arguments);
-    //     json.data.type = singularize(json.data.type)
-    //     return json
-    // },
+	//     let json = this._super(...arguments);
+	//     json.data.type = singularize(json.data.type)
+	//     return json
+	// },
 	normalizeResponse(store, model, payload) {
 		this._super(...arguments);
 		return payload;
