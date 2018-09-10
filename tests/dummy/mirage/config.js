@@ -142,7 +142,7 @@ export default function() {
 		}
 	})
 
-	this.get('/bmphones/:id', (schema, request) => {
+	this.get('/bmphones', (schema, request) => {
 		return {
 			"data": {
 				"attributes": {
@@ -153,4 +153,19 @@ export default function() {
 			}
 		}
 	})
+
+	this.patch('/bmphones/:ids', (schema, request) => {
+		return {
+			"data": {
+				"attributes": {
+					"phone": "13720200891"
+				},
+				"id": "5b7505b68fb8074eb73cece2",
+				"type": "bmphone"
+			}
+		}
+	})
+
+
+
 }

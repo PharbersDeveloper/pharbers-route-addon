@@ -1,18 +1,31 @@
 import DS from 'ember-data';
+import { inject } from '@ember/service';
 
 export default DS.JSONAPIAdapter.extend({
-    headOpt(query) {
+    cookies: inject(),
+    condition(query) {
         return {
-            dataType: 'json',
-            contentType: 'application/json,charset=utf-8',
-            Accept: 'application/json,charset=utf-8',
             data: query
         }
     },
-    queryObject(store, type, jsonObject) {
-		return this.ajax(`/api/v1/phonelogin/0`, 'POST', this.get('headOpt')(jsonObject));
+    headers: {
+        "dataType": 'json',
+        "contentType": 'application/json',
+        "Content-Type": 'application/json'
+    },
+    queryObject(url, store, type, jsonObject) {
+        this.set('headers.Authorization', "bearer " + this.get('cookies').read('token'))
+		return this.ajax(url, 'POST', this.get('condition')(jsonObject));
 	},
-    queryMultipleObject(store, type, jsonObject) {
-		return this.ajax(`/api/v1/phonelogin/0`, 'POST', this.get('headOpt')(jsonObject));
-	}
+    queryMultipleObject(url, store, type, jsonObject) {
+        this.set('headers.Authorization', "bearer " + this.get('cookies').read('token'))
+		return this.ajax(url, 'POST', this.get('condition')(jsonObject));
+	},
+    transaction(url, store, type, jsonObject) {
+        this.set('headers.Authorization', "bearer " + this.get('cookies').read('token'))
+		return this.ajax(url, 'POST', this.get('condition')(jsonObject));
+	},
+    queryRecord(store, type, jsonObject) {
+        return this.ajax('/bmphones', 'POST', this.get('condition')(jsonObject));
+    }
 });

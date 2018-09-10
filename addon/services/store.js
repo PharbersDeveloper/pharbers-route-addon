@@ -96,9 +96,9 @@ export default DS.Store.extend({
 			return value.kind === 'hasMany'
 		}
 		function deleteNullRelationship() {
-			if (Object.keys(json.data.relationships).length === 0 ) {
+			if (json.data.relationships === undefined || Object.keys(json.data.relationships).length === 0 ) {
 				delete json.data.relationships
-			} if ( json.included.length === 0 ){
+			} if (json.data.relationships === undefined || json.included.length === 0 ){
 				delete json.included
 			}
 		}
