@@ -76,7 +76,7 @@ export default DS.Store.extend({
 			}));
 	},
 
-	object2JsonApi(modelName, modelObj, isClean = false) {
+	object2JsonApi(modelName, modelObj, isClean = true) {
 
 		function relationshipIsNull(o) {
 			let relationshipsObject = modelObj._internalModel.__relationships.initializedRelationships
