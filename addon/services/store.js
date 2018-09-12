@@ -76,7 +76,7 @@ export default DS.Store.extend({
 			}));
 	},
 
-	object2JsonApi(modelName, modelObj) {
+	object2JsonApi(modelName, modelObj, isClean = false) {
 
 		function relationshipIsNull(o) {
 			let relationshipsObject = modelObj._internalModel.__relationships.initializedRelationships
@@ -133,7 +133,8 @@ export default DS.Store.extend({
 						type,
 						attributes
 					})
-					cleanModel(modelObj[elem], elem)
+					if(isClean) {cleanModel(modelObj[elem], elem)}
+
 				} else if (hasManyType(rsps.value[elem])) {
 					if(relationshipDataIsNull(rsps.value[elem])) {
 						modelObj[elem].forEach((ele, index) => {
@@ -155,16 +156,17 @@ export default DS.Store.extend({
 						})
 					}
 				}
-				cleanModel(modelObj, elem)
+				if(isClean) {cleanModel(modelObj, elem)}
+
 				number++
 			})
 		} else {
 			deleteNullRelationship()
-			cleanModel(modelObj, modelName)
+			if(isClean) {cleanModel(modelObj, modelName)}
 			return json;
 		}
 		deleteNullRelationship()
-		cleanModel(modelObj, modelName)
+		if(isClean) {cleanModel(modelObj, modelName)}
 		return json;
 	}
 
