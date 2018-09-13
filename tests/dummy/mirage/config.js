@@ -142,7 +142,7 @@ export default function() {
 		}
 	})
 
-	this.get('/bmphones', (schema, request) => {
+	this.post('/api/bmphones', (schema, request) => {
 		return {
 			"data": {
 				"attributes": {

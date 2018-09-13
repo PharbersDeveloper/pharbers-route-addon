@@ -15,16 +15,14 @@ module.exports = {
 			name: 'path',
 			type: String,
 			default: '',
-		},
-		{
+		},{
 			name: 'skip-router',
 			type: Boolean,
 			default: false,
-		},
-		{
+		},{
 			name: 'reset-namespace',
 			type: Boolean,
-		},
+		}
 	],
 
 	fileMapTokens: function(options) {
@@ -47,25 +45,39 @@ module.exports = {
 				if (options.pod) {
 					return 'adapter';
 				}
-				return options.locals.moduleName;
+				// return options.locals.moduleName;
+				return 'application'
 			},
 			__serializer_name__() {
 				if (options.pod) {
 					return 'serializer';
 				}
-				return options.locals.moduleName;
+				// return options.locals.moduleName;
+				return 'application'
 			},
 			__model__() {
 				if (options.pod) {
 					return path.join(options.podPath, options.locals.moduleName);
 				}
-				return 'models';
+				return 'models';``
 			},
 			__route__() {
 				if (options.pod) {
 					return path.join(options.podPath, options.locals.moduleName);
 				}
 				return 'routes';
+			},
+			__adapter__() {
+				if (options.pod) {
+					return path.join(options.podPath, 'application');
+				}
+				return 'adapters';
+			},
+			__serializer__() {
+				if (options.pod) {
+					return path.join(options.podPath, 'application');
+				}
+				return 'serializers';
 			},
 			__templatepath__() {
 				if (options.pod) {
@@ -78,9 +90,6 @@ module.exports = {
 					return 'template';
 				}
 				return options.locals.moduleName;
-			},
-			__application__() {
-				return 'application';
 			},
 			__root__() {
 				if (options.inRepoAddon) {
