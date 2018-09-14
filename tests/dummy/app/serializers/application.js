@@ -8,19 +8,6 @@ import PharbersSerializer from 'pharbers-route-addon/serializer/phserializer';
  * @type {String}
  */
 export default PharbersSerializer.extend({
-	primaryKey: 'id',
-	keyForAttribute(key) {
-		return key;
-	},
-	keyForRelationship(key) {
-		return key;
-	},
-	payloadKeyFromModelName(modelName) {
-		return modelName
-	},
-	modelNameFromPayloadKey(modelName) {
-		return modelName
-	},
 	// serialize(snapshot) {
 	//     let json = this._super(...arguments);
 	//     json.data.type = singularize(json.data.type)
