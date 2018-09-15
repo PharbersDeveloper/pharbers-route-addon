@@ -79,7 +79,11 @@ export default DS.Store.extend({
 	object2JsonApi(modelName, modelObj, isClean = true) {
 
 		function relationshipIsNull(o) {
-			let relationshipsObject = modelObj._internalModel.__relationships.initializedRelationships
+			let _relationships = modelObj._internalModel.__relationships;
+			if (_relationships === null ) {
+				return { status: false, value: null, keys: []}
+			}
+			let relationshipsObject = _relationships.initializedRelationships;
 			if (Object.keys(relationshipsObject).length === 0) {
 				return { status: false, value: null, keys: []}
 			} else {
