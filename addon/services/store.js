@@ -76,10 +76,13 @@ export default DS.Store.extend({
 			}));
 	},
 
+    /**
+     * 单层解析与condition的创建，解析JSONAPI
+     */
 	object2JsonApi(modelName, modelObj, isClean = true) {
 
 		function relationshipIsNull(o) {
-			let _relationships = modelObj._internalModel.__relationships;
+			let _relationships = o._internalModel.__relationships;
 			if (_relationships === null ) {
 				return { status: false, value: null, keys: []}
 			}
@@ -172,6 +175,92 @@ export default DS.Store.extend({
 		deleteNullRelationship()
 		if(isClean) {cleanModel(modelObj, modelName)}
 		return json;
-	}
+	},
 
+    /**
+     * 深层解析（只有解析）JSONAPI
+     * 由于代码遗留问题，此部分在后续重构中将于上面的进行合并
+     */
+    modelDeepParsing(modelName, modelObj) {
+        let json = modelObj.serialize();
+        json.data.id = modelObj.get('id') || "-1";
+        json.included = [];
+        let number = 0;
+        function relationshipIsNull(o) {
+			let _relationships = o._internalModel.__relationships;
+			if (_relationships === null ) {
+				return { status: false, value: null, keys: []}
+			}
+			let relationshipsObject = _relationships.initializedRelationships;
+			if (Object.keys(relationshipsObject).length === 0) {
+				return { status: false, value: null, keys: []}
+			} else {
+				return { status: true, value: relationshipsObject, keys: Object.keys(relationshipsObject)}
+			}
+		}
+		function relationshipDataIsNull(value) {
+			return value === null || Object.keys(value).length === 0  ? false : true
+		}
+		function belongsToType(value) {
+			return value.kind === 'belongsTo'
+		}
+		function hasManyType(value) {
+			return value.kind === 'hasMany'
+		}
+		function deleteNullRelationship() {
+			if (json.data.relationships === undefined || Object.keys(json.data.relationships).length === 0 ) {
+				delete json.data.relationships
+			} if (json.data.relationships === undefined || json.included.length === 0 ){
+				delete json.included
+			}
+		}
+
+        
+        relationshipRecursive(modelObj, modelName)
+        
+        function relationshipRecursive(model, name) {
+            let rsps = relationshipIsNull(model) 
+            if (rsps.status){
+                rsps.keys.forEach(key => {
+                    if (relationshipDataIsNull(model[key]) && belongsToType(rsps.value[key])) {
+                        relationshipRecursive(model[key], key)
+                    } else if (relationshipDataIsNull(model[key]) && hasManyType(rsps.value[key])) {
+                        model[key].forEach((recordModel, index) => {
+                            let attributes = recordModel.serialize().data.attributes;
+                            let type = recordModel.serialize().data.type;
+                            let relationships = recordModel.serialize().data.relationships
+                            let temp = json.included.filter((elem) => {
+                                return elem.id == recordModel.get('id') && elem.type == type 
+                            })
+                            if(!temp.length) {
+                                json.included.push({
+                                    id: recordModel.get('id') || index + "",
+                                    type,
+                                    attributes,
+                                    relationships
+                                })
+                            }
+                            relationshipRecursive(recordModel, key)
+                        })
+                    }
+                });
+            } else {
+                let attributes = model.serialize().data.attributes;
+                let type = model.serialize().data.type;
+                let temp = json.included.filter((elem) => {
+                    return elem.id == model.get('id') && elem.type == type 
+                })
+                if(!temp.length) {
+                    json.included.push({
+                        id: model.get('id') || number + "",
+                        type,
+                        attributes
+                    })
+                }
+            }
+            number++
+        }
+		deleteNullRelationship()
+		return json;
+    }
 });
