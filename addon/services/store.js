@@ -112,7 +112,7 @@ export default DS.Store.extend({
 		function cleanModel(model, name) {
 			let reVal = model.store.peekAll(name)
 			reVal.forEach(elem => {
-				elem.destroyRecord()
+				elem.destroyRecord().then( rec => rec.unloadRecord());
 			})
 		}
 
