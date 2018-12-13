@@ -101,12 +101,12 @@ export default Route.extend({
 			let condition = this.store.object2JsonApi('request', req);
 			console.info(condition)
 
-			let result = this.store.queryObject('/api/bmphones', 'bmphone', condition);
-			result.then(elem => {
-				console.info(elem)
-				localStorage.setItem('bmphone', elem)
-				// this.transitionTo('hello')
-			})
+			// let result = this.store.queryObject('/api/bmphones', 'bmphone', condition);
+			// result.then(elem => {
+			// 	console.info(elem)
+			// 	localStorage.setItem('bmphone', elem)
+			// 	// this.transitionTo('hello')
+			// })
 		}
 	}
 });

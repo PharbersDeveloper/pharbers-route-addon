@@ -1,5 +1,5 @@
 import PharbersSerializer from 'pharbers-route-addon/serializer/phserializer';
-// import { decamelize } from '@ember/string';
+import { dasherize, classify } from '@ember/string';
 // import { pluralize, singularize} from 'ember-inflector';
 
 /**
@@ -8,6 +8,18 @@ import PharbersSerializer from 'pharbers-route-addon/serializer/phserializer';
  * @type {String}
  */
 export default PharbersSerializer.extend({
+	keyForAttribute(key) {
+		return key;
+	},
+	keyForRelationship(key) {
+		return classify(key);
+	},
+	payloadKeyFromModelName(modelName) {
+		return classify(modelName);
+	},
+	modelNameFromPayloadKey(modelName) {
+		return dasherize(modelName);
+	},
 	// serialize(snapshot) {
 	//     let json = this._super(...arguments);
 	//     json.data.type = singularize(json.data.type)

@@ -130,7 +130,7 @@ export default DS.Store.extend({
 				if (belongsToType(rsps.value[elem]) && relationshipDataIsNull(modelObj[elem])) {
 					let attributes = modelObj[elem].serialize().data.attributes
 					let type = modelObj[elem].serialize().data.type
-					rdata = json.data.relationships[elem] = {};
+					rdata = json.data.relationships[this.serializerFor('application').keyForRelationship(elem)] = {};
 					rdata.data = {
 						id: modelObj[elem].get('id') || number + "",
 						type
@@ -146,7 +146,7 @@ export default DS.Store.extend({
 					if(relationshipDataIsNull(rsps.value[elem])) {
 						modelObj[elem].forEach((ele, index) => {
 							if (index === 0 ) {
-								rdata = json.data.relationships[elem] = {};
+								rdata = json.data.relationships[this.serializerFor('application').keyForRelationship(elem)] = {};
 								rdata.data = [];
 							}
 							let attributes = ele.serialize().data.attributes
@@ -215,11 +215,11 @@ export default DS.Store.extend({
 			}
 		}
 
-        
+
         relationshipRecursive(modelObj, modelName)
-        
+
         function relationshipRecursive(model, name) {
-            let rsps = relationshipIsNull(model) 
+            let rsps = relationshipIsNull(model)
             if (rsps.status){
                 rsps.keys.forEach(key => {
                     if (relationshipDataIsNull(model[key]) && belongsToType(rsps.value[key])) {
@@ -230,7 +230,7 @@ export default DS.Store.extend({
                             let type = recordModel.serialize().data.type;
                             let relationships = recordModel.serialize().data.relationships
                             let temp = json.included.filter((elem) => {
-                                return elem.id == recordModel.get('id') && elem.type == type 
+                                return elem.id == recordModel.get('id') && elem.type == type
                             })
                             if(!temp.length) {
                                 json.included.push({
@@ -248,7 +248,7 @@ export default DS.Store.extend({
                 let attributes = model.serialize().data.attributes;
                 let type = model.serialize().data.type;
                 let temp = json.included.filter((elem) => {
-                    return elem.id == model.get('id') && elem.type == type 
+                    return elem.id == model.get('id') && elem.type == type
                 })
                 if(!temp.length) {
                     json.included.push({
